@@ -1,9 +1,5 @@
-cmake_minimum_required(VERSION 3.10.2)
+cmake_minimum_required(VERSION 3.22.1)
 project(TgBot)
-
-if(POLICY CMP0074)
-    cmake_policy(SET CMP0074 NEW) # find_dependency() uses <PackageName>_ROOT variables
-endif()
 
 # options
 option(ENABLE_TESTS "Set to ON to enable building of tests" OFF)
@@ -51,17 +47,17 @@ set(SRC_LIST
 
 # libs
 ## threads
-find_dependency(Threads REQUIRED)
+find_package(Threads REQUIRED)
 
 ## zlib
-find_dependency(ZLIB REQUIRED)
+find_package(ZLIB REQUIRED)
 
 ## openssl
-find_dependency(OpenSSL REQUIRED)
+find_package(OpenSSL REQUIRED)
 include_directories(${OPENSSL_INCLUDE_DIR})
 
 ## curl
-find_dependency(CURL 7.58.0)
+find_package(CURL 7.81.0)
 if (CURL_FOUND)
     include_directories(${CURL_INCLUDE_DIRS})
     add_definitions(-DHAVE_CURL)
@@ -70,9 +66,9 @@ endif()
 ## boost
 set(Boost_USE_MULTITHREADED ON)
 if (ENABLE_TESTS)
-    find_dependency(Boost 1.65.1 COMPONENTS system unit_test_framework REQUIRED)
+    find_package(Boost 1.74.0 COMPONENTS system unit_test_framework REQUIRED)
 else()
-    find_dependency(Boost 1.65.1 COMPONENTS system REQUIRED)
+    find_package(Boost 1.74.0 COMPONENTS system REQUIRED)
 endif()
 include_directories(${Boost_INCLUDE_DIR})
 link_directories(${Boost_LIBRARY_DIR_RELEASE})
@@ -127,7 +123,7 @@ endif()
 
 # Documentation
 if(BUILD_DOCUMENTATION)
-    find_dependency(Doxygen REQUIRED)
+    find_package(Doxygen REQUIRED)
     add_custom_target(doc_doxygen ALL
         COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
