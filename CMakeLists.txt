@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10.2)
 project(TgBot)
 
 if(POLICY CMP0074)
-    cmake_policy(SET CMP0074 NEW) # find_package() uses <PackageName>_ROOT variables
+    cmake_policy(SET CMP0074 NEW) # find_dependency() uses <PackageName>_ROOT variables
 endif()
 
 # options
@@ -51,17 +51,17 @@ set(SRC_LIST
 
 # libs
 ## threads
-find_package(Threads REQUIRED)
+find_dependency(Threads REQUIRED)
 
 ## zlib
-find_package(ZLIB REQUIRED)
+find_dependency(ZLIB REQUIRED)
 
 ## openssl
-find_package(OpenSSL REQUIRED)
+find_dependency(OpenSSL REQUIRED)
 include_directories(${OPENSSL_INCLUDE_DIR})
 
 ## curl
-find_package(CURL 7.58.0)
+find_dependency(CURL 7.58.0)
 if (CURL_FOUND)
     include_directories(${CURL_INCLUDE_DIRS})
     add_definitions(-DHAVE_CURL)
@@ -70,9 +70,9 @@ endif()
 ## boost
 set(Boost_USE_MULTITHREADED ON)
 if (ENABLE_TESTS)
-    find_package(Boost 1.65.1 COMPONENTS system unit_test_framework REQUIRED)
+    find_dependency(Boost 1.65.1 COMPONENTS system unit_test_framework REQUIRED)
 else()
-    find_package(Boost 1.65.1 COMPONENTS system REQUIRED)
+    find_dependency(Boost 1.65.1 COMPONENTS system REQUIRED)
 endif()
 include_directories(${Boost_INCLUDE_DIR})
 link_directories(${Boost_LIBRARY_DIR_RELEASE})
@@ -100,7 +100,7 @@ endif()
 add_library(${PROJECT_NAME} ${SRC_LIST})
 target_include_directories(${PROJECT_NAME} PUBLIC 
                            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-                           $<INSTALL_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
+                           $<INSTALL_INTERFACE:include>)
 target_link_libraries(${PROJECT_NAME} ${LIB_LIST})
 include(GNUInstallDirs)
 install(TARGETS ${PROJECT_NAME}
@@ -127,7 +127,7 @@ endif()
 
 # Documentation
 if(BUILD_DOCUMENTATION)
-    find_package(Doxygen REQUIRED)
+    find_dependency(Doxygen REQUIRED)
     add_custom_target(doc_doxygen ALL
         COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
